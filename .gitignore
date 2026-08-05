@@ -1,0 +1,7 @@
+# OS and editor cruft — nothing else belongs here, this repo is plain static HTML
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
