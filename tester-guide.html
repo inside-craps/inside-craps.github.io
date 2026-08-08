@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- noindex on purpose: this documents a PRE-RELEASE build and lists known
+     defects. It must not surface in search beside the store listing. The repo
+     is public, so treat this as unlisted, never as private.
+     Retire this file (delete, don't rewrite) when testing ends. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Tester guide for the Chip Rack pre-release build, by Inside Craps.">
+<title>Tester Guide — Chip Rack | Inside Craps</title>
+<style>
+  :root { --felt:#14513A; --ink:#16211B; --muted:#5A6B62; --line:#DDE4E0; --bg:#FBFCFB; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { background:var(--felt); color:#fff; padding:36px 24px; }
+  .wrap { max-width:720px; margin:0 auto; }
+  header h1 { margin:0 0 6px; font-size:26px; letter-spacing:-.01em; }
+  header p { margin:0; opacity:.85; font-size:15px; }
+  main { padding:36px 24px 64px; }
+  h2 { font-size:19px; margin:36px 0 10px; letter-spacing:-.01em; }
+  h2:first-of-type { margin-top:0; }
+  h3 { font-size:16px; margin:22px 0 6px; }
+  p, li { color:#26332C; }
+  ul { padding-left:20px; }
+  li { margin:6px 0; }
+  .lead { font-size:17px; background:#fff; border:1px solid var(--line);
+          border-left:4px solid var(--felt); border-radius:6px; padding:16px 18px; }
+  .meta { color:var(--muted); font-size:14px; }
+  a { color:var(--felt); }
+  code { background:#EEF3F0; padding:1px 5px; border-radius:4px; font-size:14px; }
+  blockquote { margin:14px 0; padding:12px 16px; background:#fff;
+                border:1px solid var(--line); border-left:4px solid var(--felt); border-radius:6px; }
+  hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+  footer { border-top:1px solid var(--line); margin-top:44px; padding-top:20px;
+           color:var(--muted); font-size:14px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Tester Guide</h1>
+    <p>Chip Rack — published by Inside Craps</p>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <p class="lead"><strong>This page is for Chip Rack testers.</strong> It describes a
+    pre-release build (0.3.2) and includes a list of known rough edges, so it is not the
+    documentation for the released app. Prefer a copy you can keep?
+    <a href="chip-rack-tester-guide.pdf">Download it as a PDF</a>.</p>
+<h2>What this is</h2>
+<p>A <strong>record-keeping app for casino trips.</strong> You log what you bought in for and what you walked
+away with, and it does the arithmetic — per session, per trip, and over time.</p>
+<p>Think of it as replacing the notes app, the spreadsheet, or the back of the envelope most
+players actually use.</p>
+<h2>What this isn&rsquo;t</h2>
+<p><strong>There is no gambling in this app.</strong> No wagering, no real money, no play money, no games. It
+doesn&rsquo;t connect to a casino, a sportsbook, or a payment system. It&rsquo;s a ledger — the gambling
+already happened somewhere else, and this is where you write down how it went.</p>
+<p>Worth stating plainly, because anything in this category invites the assumption.</p>
+<p><em>(The name comes from the chip rail — the grooved track around a craps table where players keep
+their chips. Your rack is what you brought and what you have left, which is exactly what the app
+keeps track of.)</em></p>
+<h2>Your data never leaves your phone</h2>
+<p>There&rsquo;s no account to create, no login, no cloud, no sync, and no analytics. Everything you log
+is stored in a database on your device, and if you delete the app, it&rsquo;s gone.</p>
+<p>The app makes exactly <strong>one</strong> kind of outside connection: it checks whether a newer version of
+itself is available. That request contains only the app&rsquo;s version, its release channel and
+whether you&rsquo;re on Android or iOS — no account, no device ID, and none of what you&rsquo;ve entered.
+Nothing you log ever leaves your phone. Full detail at
+<a href="https://inside-craps.github.io/privacy.html">https://inside-craps.github.io/privacy.html</a>.</p>
+<p>That&rsquo;s a deliberate design decision, not a missing feature. The trade-off: <strong>nothing is backed
+up automatically.</strong> If you want a copy, use the export in Settings (more below).</p>
+<hr />
+<h2>The core idea: Trips and Sessions</h2>
+<p>Two levels, and everything else hangs off them.</p>
+<p><strong>A Session</strong> is one sitting at one game. You record what you <strong>bought in</strong> for and what you
+<strong>colored up</strong> with — the app works out the profit or loss. You can also note the casino, the
+game, the date and time, and anything else worth remembering.</p>
+<p><strong>A Trip</strong> is a container for sessions. It has a starting bankroll, and it tracks your running
+position across every session inside it.</p>
+<p>So: a long weekend in Vegas is one Trip. The four separate times you sat down at a craps table
+across those days are four Sessions.</p>
+<h2>Two kinds of Trip</h2>
+<p><strong>Standard trips</strong> are what you&rsquo;d expect — a named trip with a start and end date. &ldquo;March Vegas
+Trip.&rdquo; You create one, log sessions against it, and it closes out when the dates pass.</p>
+<p><strong>Local Play</strong> is different and worth understanding. It&rsquo;s a single, permanent, never-ending
+bucket for your <strong>routine play close to home</strong> — not for one specific casino. It has no dates
+and never closes. The idea is that regular local play isn&rsquo;t really a &ldquo;trip&rdquo;; it&rsquo;s ongoing, and
+forcing it into trip-shaped boxes would be annoying and would distort your numbers. So it gets
+its own bucket, and the reports let you look at local play and real trips separately.</p>
+<p>You get one Local Play trip, tied to the home location you pick during setup — and you can log
+sessions against it at <strong>any casino in that area</strong>, not just one. If you rotate between three
+places within reach of home, all three belong here.</p>
+<p>The <strong>home casino</strong> you choose during setup is only a convenience: it pre-fills the casino field
+when you log a session, so the place you visit most often is already selected. You can change it
+on any session, and doing so doesn&rsquo;t reassign the trip or affect anything else.</p>
+<h2>Where you played</h2>
+<p>Places are organised in three levels:</p>
+<p><strong>Region → Destination → Casino</strong></p>
+<p>For example: <em>Las Vegas → Las Vegas Strip → Bellagio</em>, or <em>Mississippi → Biloxi → Beau Rivage</em>.</p>
+<p>About 214 casinos across 46 regions come built in, so most of the time you&rsquo;re just picking from
+a list. <strong>If a casino isn&rsquo;t there, you can add it</strong> — Locations tab, find the destination, add
+it under that. You can also <strong>rename</strong> a casino or <strong>deactivate</strong> one you&rsquo;ll never use, from the
+casino&rsquo;s own screen. Anything you add or edit is yours and won&rsquo;t be overwritten by app updates.</p>
+<p><strong>You can&rsquo;t add a whole new destination or region yourself yet</strong> — only a casino within an
+existing one. If somewhere you play doesn&rsquo;t fit anywhere in the list, tell me; that&rsquo;s a real gap
+and I&rsquo;d rather hear it than have you force a session into the wrong place.</p>
+<p><strong>The built-in list can grow.</strong> As of 0.3.2, an app update can add casinos to your existing
+install — so if a casino appears that wasn&rsquo;t there last week, that&rsquo;s intended, not a glitch.
+Occasionally one may also be corrected or renamed (a few in the list still carry names the
+property has since changed). <strong>Casinos you added yourself are never touched by this</strong>, and
+neither is one you&rsquo;ve renamed — an edit you made is treated as yours and left alone permanently.</p>
+<p><strong>If a casino you play at is missing, please tell me.</strong> That&rsquo;s a genuinely useful report now
+that the list can be updated in place, and it was the exact gap that prompted this feature: a
+session at a Pennsylvania casino that wasn&rsquo;t in the app.</p>
+<p><strong>⚠️ If you add a casino and it later shows up in an update too, you&rsquo;ll see it twice.</strong> The app
+can&rsquo;t safely tell that your &ldquo;Hollywood Grantville&rdquo; and the official &ldquo;Hollywood Casino at Penn
+National Race Course&rdquo; are the same building — and guessing wrong would be worse, since merging
+two casinos would move your session history onto the wrong one. So it leaves both alone and
+lets you decide.</p>
+<p><strong>This is worth fixing rather than ignoring</strong>, because until you do, your Profit/Loss by Casino
+report splits that one casino across two rows. Two steps, in this order:</p>
+<ol>
+<li><strong>Edit any session logged at your version</strong> and pick the official casino instead. (Open the
+   session, change the casino, save.)</li>
+<li><strong>Then deactivate your own entry</strong> — Locations tab, find it, deactivate. It disappears from
+   the pickers, and nothing you&rsquo;ve logged is lost.</li>
+</ol>
+<p>Do it in that order; deactivating first hides the old casino while a session still points at
+it, which just makes the edit fiddlier. <strong>And it&rsquo;s still worth telling me the casino was
+missing</strong> — that&rsquo;s how it gets into the built-in list for everyone else.</p>
+<p>One quirk that&rsquo;s intentional: <strong>Las Vegas is the only region split into multiple destinations</strong>
+(Strip, Downtown, South Strip–Henderson). That&rsquo;s because a Vegas trip realistically moves
+between all three, and the app lets you log a session at any casino in the region your trip
+belongs to — not just the specific destination. Everywhere else, region and destination are the
+same thing.</p>
+<h2>What you can log per session</h2>
+<p><strong>17 game types</strong> are built in: Craps, Blackjack, Baccarat, Roulette, Slots, Video Poker, Poker,
+Pai Gow Poker, Sic Bo, Keno, and the house-banked poker games — Three Card, Ultimate Texas
+Hold&rsquo;em, Let It Ride, Mississippi Stud, Four Card, Casino Hold&rsquo;em and Caribbean Stud.</p>
+<p>Most have <strong>variants</strong> (Craps: Traditional, Crapless, Bubble, Stadium — Blackjack: 3:2, 6:5,
+Single Deck, Double Deck, Spanish 21, Free Bet) and many have <strong>side bets</strong> you can tick off
+(Craps: ATS, Fire Bet, Repeater, Sharpshooter, Hot Roller).</p>
+<p>Variants are pick-one. Side bets are pick-as-many-as-apply. Both are optional.</p>
+<p><strong>Adding your own game types, variants or side bets isn&rsquo;t available yet.</strong> The built-in list is
+what you get for now. <strong>So if a game, a rule variant or a side bet you actually play is
+missing, that&rsquo;s one of the more useful things you can report</strong> — especially craps side bets,
+where the built-in list is deliberately short and house offerings vary a lot between properties.</p>
+<p><em>(Unlike casinos, which you can add yourself, this one has no workaround. Log the session
+against the closest game type and tell me what was missing.)</em></p>
+<hr />
+<h2>Reports</h2>
+<p>This is where the logging pays off. Everything is filterable by time period (All Time, This
+Year, Last Year) and by whether you want Local Play, Standard Trips, or both.</p>
+<ul>
+<li><strong>Bankroll Trend</strong> — your cumulative position over time, with the highest and lowest points
+  called out.</li>
+<li><strong>Profit/Loss by Casino</strong> — where you actually do well, and where you don&rsquo;t.</li>
+<li><strong>Profit/Loss by Game Type</strong> — same question, by game and variant.</li>
+<li><strong>Day of Week</strong> — whether Saturdays really are worse than Tuesdays.</li>
+<li><strong>Time of Day</strong> — Early Morning, Mid-Day, Evening, Late Night. You can adjust where those
+  boundaries fall in Settings, since not everyone&rsquo;s &ldquo;evening&rdquo; starts at six.</li>
+</ul>
+<p><strong>Every chart drills down.</strong> Tap a bar or a row and you get the actual sessions behind that
+number, so a surprising figure is one tap from being explained.</p>
+<h2>Tax report</h2>
+<p>Generates a <strong>Win/Loss report</strong> for your records, which you can share or save to your device as
+a <strong>CSV or a PDF</strong>.</p>
+<p>There&rsquo;s a &ldquo;Report Info &amp; Limitations&rdquo; screen attached to it — <strong>please read that before judging
+the output.</strong> It explains what the report does and doesn&rsquo;t claim to be.</p>
+<p><strong>It is not tax advice, and neither is this document.</strong> It organises numbers you entered; what
+those numbers mean for your return is between you and someone qualified.</p>
+<h2>Backup and restore</h2>
+<p>Settings → Export writes your entire database to a single file, which you can send to yourself,
+drop in cloud storage, or keep wherever you like. Import reads one back.</p>
+<p>Two things to know:</p>
+<p><strong>Import replaces, it doesn&rsquo;t merge.</strong> Restoring a backup wipes what&rsquo;s currently in the app and
+puts the backup&rsquo;s contents in place. There&rsquo;s no combining two datasets.</p>
+<p><strong>This is your only backup.</strong> Nothing is automatic. If you&rsquo;re logging anything you&rsquo;d be annoyed
+to lose, export occasionally.</p>
+<hr />
+<h2>Known rough edges — please don&rsquo;t report these</h2>
+<p>Genuinely useful to know, so you don&rsquo;t spend time writing up things already on the list:</p>
+<p><strong>Dark mode is only partly built.</strong> The Appearance setting currently affects the Trips tab only.
+Every other screen stays light. That&rsquo;s unfinished work, not a bug.</p>
+<p><strong>Appearance changes don&rsquo;t apply until you restart the app.</strong> Picking Dark won&rsquo;t visibly do
+anything — and the button won&rsquo;t even look selected — until you fully close and reopen. Known,
+being fixed.</p>
+<p><strong>One buy-in and one color-up per session.</strong> If you rebought three times, you&rsquo;ll need to either
+log separate sessions or net it out yourself. Multiple buy-ins per session is a known future
+addition.</p>
+<hr />
+<h2>What&rsquo;s genuinely useful to report</h2>
+<p>Anything that <strong>crashes, loses data, or shows a wrong number.</strong> Those three matter most, in that
+order.</p>
+<p>After that: anything confusing. If you couldn&rsquo;t work out how to do something, that&rsquo;s a real
+finding — the app being obvious is a feature, and &ldquo;I gave up looking for it&rdquo; is exactly the
+report that&rsquo;s hard to get any other way.</p>
+<p><strong>Screenshots help enormously.</strong> Android has no built-in way to send them to me, so just text or
+email them.</p>
+<p><strong>Please include the version.</strong> Settings tab → About, at the bottom — it shows the version,
+build number and update ID. Paste that into any report. It matters more than it looks: two
+people can be running the same version number and different code, and that line is how I tell.</p>
+<hr />
+<h2>Getting started, in about a minute</h2>
+<ol>
+<li>Open the app. It walks you through a short setup — pick your home location and casino, and
+   optionally a default game and starting bankroll.</li>
+<li>That creates your <strong>Local Play</strong> trip automatically.</li>
+<li>Log a session against it: Trips tab → your Local Play trip → <strong>+ Log Session</strong>.</li>
+<li>Or create a real trip: Trips tab → <strong>+ New Trip</strong>, give it dates and a starting bankroll.</li>
+<li>Once you&rsquo;ve got a few sessions in, the <strong>Reports</strong> tab starts being interesting.</li>
+</ol>
+<p>Feel free to enter fake data to poke around — it&rsquo;s your phone, and you can export first or
+uninstall and start over whenever you want.</p>
+  <footer>
+    Chip Rack is published by Inside Craps. ©&nbsp;2026 Inside Craps. All rights reserved.
+    · <a href="./">Home</a>
+    · <a href="privacy.html">Privacy Policy</a>
+    · <a href="chip-rack-tester-guide.pdf">PDF</a>
+  </footer>
+  </div>
+</main>
+</body>
+</html>
