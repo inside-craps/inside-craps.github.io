@@ -10,7 +10,33 @@ deliberately load no fonts, scripts or assets from third parties.
 |---|---|
 | `index.html` | Landing page |
 | `privacy.html` | **Privacy policy — see the warning below** |
+| `tester-guide.html` | Tester guide — **temporary, see below** |
+| `chip-rack-tester-guide.pdf` | Printable copy of the same, linked from that page |
 | `.nojekyll` | Skips the Jekyll build; Pages serves the files as-is |
+
+## The tester guide is temporary
+
+`tester-guide.html` documents a **pre-release build** and includes a list of known rough edges.
+It exists so testers have a link that can be corrected without re-sending anything.
+
+- **`noindex, nofollow`** is set in the page head so it cannot surface in search beside the store
+  listing. ⚠️ **The repo is public — this is unlisted, not private.** Anyone with the URL, a
+  reviewer included, can read it.
+- **Deliberately not linked from `index.html`.** Nothing on the public landing page should point
+  at a list of known defects.
+- **Regenerated from source**, not hand-edited. It is built from
+  `claude/tester-guide-app-overview.md` in the project, and the PDF is rendered from the same
+  markdown — so edit that, regenerate both, and commit them together. Editing the HTML directly
+  guarantees the two drift apart.
+- **Retire by deleting both files**, not by rewriting them, once testing ends.
+
+### 🔒 `guide.html` and `help.html` are reserved — do not use them
+
+Those names are held for the **released app's documentation**, which the app itself will link to
+from inside the binary. That URL becomes as permanent as the privacy policy URL below: shipped
+into installed apps, unchangeable without an update. It must not be spent on a temporary
+document, and the released docs are a different thing anyway — no version pinning, no
+rough-edges section.
 
 ## ⚠️ Do not rename or move `privacy.html`
 
