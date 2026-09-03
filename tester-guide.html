@@ -49,7 +49,7 @@
 <main>
   <div class="wrap">
     <p class="lead"><strong>This page is for Chip Rack testers.</strong> It describes a
-    pre-release build (0.3.2) and includes a list of known rough edges, so it is not the
+    pre-release build (0.3.4) and includes a list of known rough edges, so it is not the
     documentation for the released app. Prefer a copy you can keep?
     <a href="chip-rack-tester-guide.pdf">Download it as a PDF</a>.</p>
 <h2>What this is</h2>
@@ -69,9 +69,10 @@ keeps track of.)</em></p>
 <p>There&rsquo;s no account to create, no login, no cloud, no sync, and no analytics. Everything you log
 is stored in a database on your device, and if you delete the app, it&rsquo;s gone.</p>
 <p>The app makes exactly <strong>one</strong> kind of outside connection: it checks whether a newer version of
-itself is available. That request contains only the app&rsquo;s version, its release channel and
-whether you&rsquo;re on Android or iOS — no account, no device ID, and none of what you&rsquo;ve entered.
-Nothing you log ever leaves your phone. Full detail at
+itself is available. That request carries the app&rsquo;s version, its release channel, whether
+you&rsquo;re on Android or iOS, the project&rsquo;s identifier with the update service, and a random token
+that tells the service whether this installation has already asked. No account, no device ID, no
+advertising ID, and none of what you&rsquo;ve entered. Nothing you log ever leaves your phone. Full detail at
 <a href="https://inside-craps.github.io/privacy.html">https://inside-craps.github.io/privacy.html</a>.</p>
 <p>That&rsquo;s a deliberate design decision, not a missing feature. The trade-off: <strong>nothing is backed
 up automatically.</strong> If you want a copy, use the export in Settings (more below).</p>
@@ -194,6 +195,9 @@ being fixed.</p>
 <p><strong>One buy-in and one color-up per session.</strong> If you rebought three times, you&rsquo;ll need to either
 log separate sessions or net it out yourself. Multiple buy-ins per session is a known future
 addition.</p>
+<p><strong>On a folding phone, the app may jump back to the Trips tab when you fold or unfold.</strong>
+Fixed in 0.3.4 — if you still see it, that&rsquo;s worth telling me, because it means the fix
+didn&rsquo;t take on your particular device.</p>
 <hr />
 <h2>What&rsquo;s genuinely useful to report</h2>
 <p>Anything that <strong>crashes, loses data, or shows a wrong number.</strong> Those three matter most, in that
