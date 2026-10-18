@@ -16,7 +16,11 @@
      EDIT THE MARKDOWN FIRST, then patch the body here, then regenerate the PDF.
      Never edit this file first: it is the copy with extra structure, so changes
      made here are the ones that quietly fail to propagate back to the other two.
-     Verified identical by diff on Sept 3, 2026 — keep it that way. -->
+     Regenerated from the markdown on Oct 18, 2026 (1.0.0 pass: false
+     keyboard-fix claim removed, casino count, iOS screenshot route,
+     platform divergence note). Body below is machine-converted from the source of
+     record, so the three copies are identical by construction, not by
+     diff. Keep it that way. -->
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Tester guide for the Chip Rack pre-release build, by Inside Craps.">
 <title>Tester Guide — Chip Rack | Inside Craps</title>
@@ -44,6 +48,12 @@
   blockquote { margin:14px 0; padding:12px 16px; background:#fff;
                 border:1px solid var(--line); border-left:4px solid var(--felt); border-radius:6px; }
   hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+  table { border-collapse:collapse; width:100%; margin:16px 0; font-size:15px;
+          background:#fff; border:1px solid var(--line); border-radius:6px; }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line);
+           vertical-align:top; }
+  th { background:#F3F7F5; font-weight:600; }
+  tr:last-child td { border-bottom:0; }
   footer { border-top:1px solid var(--line); margin-top:44px; padding-top:20px;
            color:var(--muted); font-size:14px; }
 </style>
@@ -57,8 +67,8 @@
 </header>
 <main>
   <div class="wrap">
-    <p class="lead"><strong>This page is for Chip Rack testers.</strong> It describes a
-    pre-release build (0.3.4) and includes a list of known rough edges, so it is not the
+    <p class="lead"><strong>This page is for Chip Rack testers.</strong> It describes
+    the 1.0.0 build and includes a list of known rough edges, so it is not the
     documentation for the released app. Prefer a copy you can keep?
     <a href="chip-rack-tester-guide.pdf">Download it as a PDF</a>.</p>
 <h2>What this is</h2>
@@ -78,11 +88,11 @@ keeps track of.)</em></p>
 <p>There&rsquo;s no account to create, no login, no cloud, no sync, and no analytics. Everything you log
 is stored in a database on your device, and if you delete the app, it&rsquo;s gone.</p>
 <p>The app makes exactly <strong>one</strong> kind of outside connection: it checks whether a newer version of
-itself is available. That request carries the app&rsquo;s version, its release channel, whether
-you&rsquo;re on Android or iOS, the project&rsquo;s identifier with the update service, and a random token
-that tells the service whether this installation has already asked. No account, no device ID, no
-advertising ID, and none of what you&rsquo;ve entered. Nothing you log ever leaves your phone. Full detail at
-<a href="https://inside-craps.github.io/privacy.html">https://inside-craps.github.io/privacy.html</a>.</p>
+itself is available. That request carries the app&rsquo;s version, its release channel, whether you&rsquo;re
+on Android or iOS, the project&rsquo;s identifier with the update service, and a random token that
+tells the service whether this installation has already asked. No account, no device ID, no
+advertising ID, and none of what you&rsquo;ve entered. Nothing you log ever leaves your phone. Full
+detail at <a href="https://inside-craps.github.io/privacy.html">https://inside-craps.github.io/privacy.html</a>.</p>
 <p>That&rsquo;s a deliberate design decision, not a missing feature. The trade-off: <strong>nothing is backed
 up automatically.</strong> If you want a copy, use the export in Settings (more below).</p>
 <hr />
@@ -102,29 +112,83 @@ Trip.&rdquo; You create one, log sessions against it, and it closes out when the
 bucket for your <strong>routine play close to home</strong> — not for one specific casino. It has no dates
 and never closes. The idea is that regular local play isn&rsquo;t really a &ldquo;trip&rdquo;; it&rsquo;s ongoing, and
 forcing it into trip-shaped boxes would be annoying and would distort your numbers. So it gets
-its own bucket, and the reports let you look at local play and real trips separately.</p>
-<p>You get one Local Play trip, tied to the home location you pick during setup — and you can log
-sessions against it at <strong>any casino in that area</strong>, not just one. If you rotate between three
-places within reach of home, all three belong here.</p>
+its own bucket, and the reports let you look at local play and travel trips separately.</p>
+<p>You get one Local Play trip, tied to the Destination you pick during setup under <strong>Where You
+Play Locally</strong> — and you can log sessions against it at <strong>any casino in that Area</strong>, not just
+one. If you rotate between three places within reach of home, all three belong here.</p>
 <p>The <strong>home casino</strong> you choose during setup is only a convenience: it pre-fills the casino field
 when you log a session, so the place you visit most often is already selected. You can change it
 on any session, and doing so doesn&rsquo;t reassign the trip or affect anything else.</p>
+<h2>Two numbers that look like they should match, and don&rsquo;t</h2>
+<p>On a trip you&rsquo;ll see <strong>Take Home</strong> and <strong>Net P/L</strong>. They answer different questions:</p>
+<ul>
+<li><strong>Net P/L</strong> is what you won or lost.</li>
+<li><strong>Take Home</strong> is what you&rsquo;d walk away with — your starting bankroll with the Net P/L applied.</li>
+</ul>
+<p>So a trip you started with $1,000 and lost $200 on shows <strong>Net P/L −$200</strong> and <strong>Take Home
+$800</strong>. Both are right; neither is a correction of the other. There&rsquo;s a line on the trip screen
+saying so, added after a tester reasonably read them as two attempts at the same figure.</p>
 <h2>Where you played</h2>
-<p>Places are organised in three levels:</p>
-<p><strong>Region → Destination → Casino</strong></p>
-<p>For example: <em>Las Vegas → Las Vegas Strip → Bellagio</em>, or <em>Mississippi → Biloxi → Beau Rivage</em>.</p>
-<p>About 214 casinos across 46 regions come built in, so most of the time you&rsquo;re just picking from
-a list. <strong>If a casino isn&rsquo;t there, you can add it</strong> — Locations tab, find the destination, add
-it under that. You can also <strong>rename</strong> a casino or <strong>deactivate</strong> one you&rsquo;ll never use, from the
+<p>Three things nest: <strong>Casinos</strong> sit inside a <strong>Destination</strong>, and a Destination sits inside an
+<strong>Area</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>what it is</th>
+<th>how many</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Casino</strong></td>
+<td>the property itself</td>
+<td>226</td>
+<td>Bellagio</td>
+</tr>
+<tr>
+<td><strong>Destination</strong></td>
+<td>the place you&rsquo;d say you were going</td>
+<td>48</td>
+<td>Las Vegas Strip</td>
+</tr>
+<tr>
+<td><strong>Area</strong></td>
+<td>the wider place that Destination belongs to</td>
+<td>46</td>
+<td>Las Vegas</td>
+</tr>
+</tbody>
+</table>
+<p>For 45 of the 46 Areas, the Area and the Destination are <strong>the same place under the same name</strong> —
+<em>Biloxi</em> is an Area containing one Destination, also called <em>Biloxi</em>. So most of the time this
+distinction is invisible and you can ignore it.</p>
+<p><strong>Las Vegas is the only exception</strong>: one Area holding three Destinations — Strip, Downtown, and
+South Strip–Henderson. That&rsquo;s deliberate, because a Vegas trip realistically moves between all
+three. It&rsquo;s also why a trip lets you log a session at any casino in its <strong>Area</strong>, not only its
+Destination.</p>
+<p><strong>There&rsquo;s also a Region</strong>, which is purely a way to narrow a long list when you&rsquo;re choosing a
+Destination. There are seven: <em>West, South, Midwest, Mid Atlantic, Northeast, Southwest</em> and
+<em>Las Vegas</em>. You&rsquo;ll meet it as the first of the two dropdowns — pick the Region, then the
+Destination.</p>
+<blockquote>
+<p>❗ <strong>This guide had this wrong until September 2026</strong> and said &ldquo;46 regions,&rdquo; which is the
+number of <strong>Areas</strong>. If you read the old version, then opened the app and found a Region
+dropdown with seven entries instead of forty-six — that was the guide&rsquo;s fault, not yours, and
+not a bug. The casino count was stale too.</p>
+</blockquote>
+<p><strong>If a casino isn&rsquo;t there, you can add it</strong> — Destinations tab, find the Destination, add it
+under that. You can also <strong>rename</strong> a casino or <strong>deactivate</strong> one you&rsquo;ll never use, from the
 casino&rsquo;s own screen. Anything you add or edit is yours and won&rsquo;t be overwritten by app updates.</p>
-<p><strong>You can&rsquo;t add a whole new destination or region yourself yet</strong> — only a casino within an
+<p><strong>You can&rsquo;t add a whole new Destination or Area yourself yet</strong> — only a casino within an
 existing one. If somewhere you play doesn&rsquo;t fit anywhere in the list, tell me; that&rsquo;s a real gap
 and I&rsquo;d rather hear it than have you force a session into the wrong place.</p>
-<p><strong>The built-in list can grow.</strong> As of 0.3.2, an app update can add casinos to your existing
-install — so if a casino appears that wasn&rsquo;t there last week, that&rsquo;s intended, not a glitch.
-Occasionally one may also be corrected or renamed (a few in the list still carry names the
-property has since changed). <strong>Casinos you added yourself are never touched by this</strong>, and
-neither is one you&rsquo;ve renamed — an edit you made is treated as yours and left alone permanently.</p>
+<p><strong>The built-in list can grow.</strong> An app update can add casinos to your existing install — so if a
+casino appears that wasn&rsquo;t there last week, that&rsquo;s intended, not a glitch. Occasionally one may
+also be corrected or renamed (a few in the list still carry names the property has since
+changed). <strong>Casinos you added yourself are never touched by this</strong>, and neither is one you&rsquo;ve
+renamed — an edit you made is treated as yours and left alone permanently.</p>
 <p><strong>If a casino you play at is missing, please tell me.</strong> That&rsquo;s a genuinely useful report now
 that the list can be updated in place, and it was the exact gap that prompted this feature: a
 session at a Pennsylvania casino that wasn&rsquo;t in the app.</p>
@@ -138,17 +202,12 @@ report splits that one casino across two rows. Two steps, in this order:</p>
 <ol>
 <li><strong>Edit any session logged at your version</strong> and pick the official casino instead. (Open the
    session, change the casino, save.)</li>
-<li><strong>Then deactivate your own entry</strong> — Locations tab, find it, deactivate. It disappears from
-   the pickers, and nothing you&rsquo;ve logged is lost.</li>
+<li><strong>Then deactivate your own entry</strong> — Destinations tab, find it, deactivate. It disappears
+   from the pickers, and nothing you&rsquo;ve logged is lost.</li>
 </ol>
 <p>Do it in that order; deactivating first hides the old casino while a session still points at
 it, which just makes the edit fiddlier. <strong>And it&rsquo;s still worth telling me the casino was
 missing</strong> — that&rsquo;s how it gets into the built-in list for everyone else.</p>
-<p>One quirk that&rsquo;s intentional: <strong>Las Vegas is the only region split into multiple destinations</strong>
-(Strip, Downtown, South Strip–Henderson). That&rsquo;s because a Vegas trip realistically moves
-between all three, and the app lets you log a session at any casino in the region your trip
-belongs to — not just the specific destination. Everywhere else, region and destination are the
-same thing.</p>
 <h2>What you can log per session</h2>
 <p><strong>17 game types</strong> are built in: Craps, Blackjack, Baccarat, Roulette, Slots, Video Poker, Poker,
 Pai Gow Poker, Sic Bo, Keno, and the house-banked poker games — Three Card, Ultimate Texas
@@ -163,6 +222,14 @@ missing, that&rsquo;s one of the more useful things you can report</strong> — 
 where the built-in list is deliberately short and house offerings vary a lot between properties.</p>
 <p><em>(Unlike casinos, which you can add yourself, this one has no workaround. Log the session
 against the closest game type and tell me what was missing.)</em></p>
+<h2>Currency</h2>
+<p>Set in Settings. A new install now picks it from your phone&rsquo;s own country rather than assuming
+US dollars.</p>
+<p>⚠️ <strong>It&rsquo;s display formatting only — the app does not convert anything.</strong> If you play in both the
+US and Canada, amounts from both are currently shown with the same symbol and added together as
+if they were one currency. <strong>Per-session currency, worked out from the casino&rsquo;s Destination, is
+the real answer and it&rsquo;s coming after v1.</strong> If that affects you, say so — it moved up the list
+because a tester raised it.</p>
 <hr />
 <h2>Reports</h2>
 <p>This is where the logging pays off. Everything is filterable by time period (All Time, This
@@ -178,6 +245,8 @@ Year, Last Year) and by whether you want Local Play, Standard Trips, or both.</p
 </ul>
 <p><strong>Every chart drills down.</strong> Tap a bar or a row and you get the actual sessions behind that
 number, so a surprising figure is one tap from being explained.</p>
+<p><em>The place filter here is </em><em>Area</em><em>, then </em><em>Destination</em><em> — the wider one first. That&rsquo;s the same
+two levels described above, just approached from the top instead of through a Region.</em></p>
 <h2>Tax report</h2>
 <p>Generates a <strong>Win/Loss report</strong> for your records, which you can share or save to your device as
 a <strong>CSV or a PDF</strong>.</p>
@@ -195,18 +264,43 @@ puts the backup&rsquo;s contents in place. There&rsquo;s no combining two datase
 to lose, export occasionally.</p>
 <hr />
 <h2>Known rough edges — please don&rsquo;t report these</h2>
-<p>Genuinely useful to know, so you don&rsquo;t spend time writing up things already on the list:</p>
+<p>Genuinely useful to know, so you don&rsquo;t spend time writing up things already on the list.</p>
+<blockquote>
+<p>⚠️ <strong>Read this list as &ldquo;already known,&rdquo; not as &ldquo;don&rsquo;t mention it.&rdquo;</strong> An earlier version of
+this section described partial dark mode in a way that made genuinely <strong>unreadable</strong> controls
+sound like a known cosmetic gap — and two people reported it anyway, which is the only reason
+it got fixed. <strong>If something is unreadable, broken, or loses data, report it even if it looks
+like it belongs below.</strong></p>
+<p>📱 <strong>iPhone and Android are briefly running different code.</strong> The iPhone beta has a batch of
+fixes the Android Play version hasn&rsquo;t received yet. They&rsquo;re in the next Android update. Where
+it matters, the platform is marked below.</p>
+</blockquote>
 <p><strong>Dark mode is only partly built.</strong> The Appearance setting currently affects the Trips tab only.
-Every other screen stays light. That&rsquo;s unfinished work, not a bug.</p>
+Every other screen stays light. That&rsquo;s unfinished work, not a bug, and full theming comes after
+v1.</p>
 <p><strong>Appearance changes don&rsquo;t apply until you restart the app.</strong> Picking Dark won&rsquo;t visibly do
 anything — and the button won&rsquo;t even look selected — until you fully close and reopen. Known,
 being fixed.</p>
 <p><strong>One buy-in and one color-up per session.</strong> If you rebought three times, you&rsquo;ll need to either
 log separate sessions or net it out yourself. Multiple buy-ins per session is a known future
 addition.</p>
-<p><strong>On a folding phone, the app may jump back to the Trips tab when you fold or unfold.</strong>
-Fixed in 0.3.4 — if you still see it, that&rsquo;s worth telling me, because it means the fix
-didn&rsquo;t take on your particular device.</p>
+<p><strong>You can&rsquo;t clear a time once you&rsquo;ve set it.</strong> A session&rsquo;s End Time is optional and starts out
+unset, but once it has a value there&rsquo;s no way to empty it again — only to change it. A way to
+clear it is coming. <em>(Note that a blank </em><em>Color-up</em><em>, not a blank End Time, is what marks a
+session as still in progress, so this doesn&rsquo;t affect your numbers.)</em></p>
+<p><strong>📱 Android: the keyboard can cover the field you&rsquo;re typing in.</strong> On the session form, Buy-in,
+Color-up, Average Bet and Table Number don&rsquo;t scroll clear of the keyboard, so the field you&rsquo;re
+filling can end up hidden behind it. Scroll the form up before tapping the field as a
+workaround. Fixed on iPhone; the Android fix is still to come.</p>
+<p><strong>📱 Android Play version (1.0.0) only — five bugs are fixed but not yet released:</strong> Reports not
+updating when you add or delete a session; a casino you deactivated vanishing from sessions and
+trips that pointed at it; the Destinations list jumping backwards while you scroll; a
+deactivated casino coming back every time you restart the app; and cancelling out of a date or
+time picker setting a value anyway. All five are fixed and ship in the next Android update.
+<strong>Please do still report anything else.</strong></p>
+<p><strong>✅ Fixed and worth re-checking if you reported one of these:</strong> the unreadable dropdowns in dark
+mode; the app jumping back to the Trips tab when you fold or unfold a folding phone; and the
+session date defaulting to today on a trip with different dates.</p>
 <hr />
 <h2>What&rsquo;s genuinely useful to report</h2>
 <p>Anything that <strong>crashes, loses data, or shows a wrong number.</strong> Those three matter most, in that
@@ -214,11 +308,18 @@ order.</p>
 <p>After that: anything confusing. If you couldn&rsquo;t work out how to do something, that&rsquo;s a real
 finding — the app being obvious is a feature, and &ldquo;I gave up looking for it&rdquo; is exactly the
 report that&rsquo;s hard to get any other way.</p>
-<p><strong>Screenshots help enormously.</strong> Android has no built-in way to send them to me, so just text or
-email them.</p>
+<p><strong>Screenshots help enormously.</strong></p>
+<ul>
+<li><strong>On iPhone</strong>, take a screenshot while the app is open and TestFlight will offer to send it
+  straight to me with a note attached. That&rsquo;s by far the easiest route, and the note comes
+  through with the build details already filled in.</li>
+<li><strong>On Android</strong> there&rsquo;s no equivalent, so just text or email them.</li>
+</ul>
+<p>Either way, please mention which screen you were on.</p>
 <p><strong>Please include the version.</strong> Settings tab → About, at the bottom — it shows the version,
 build number and update ID. Paste that into any report. It matters more than it looks: two
-people can be running the same version number and different code, and that line is how I tell.</p>
+people can be running the same version number and different code, and <strong>the update ID is the
+only line that tells those two apart.</strong></p>
 <hr />
 <h2>Will it run on my phone?</h2>
 <p><strong>Android 7.0 or later</strong>, or <strong>iOS 15.1 or later</strong> (iPhone 6s and newer). Both are old enough
@@ -228,8 +329,8 @@ install from the app stores at all.</p>
 isn&rsquo;t designed for one, and iPad isn&rsquo;t supported.</p>
 <h2>Getting started, in about a minute</h2>
 <ol>
-<li>Open the app. It walks you through a short setup — pick your home location and casino, and
-   optionally a default game and starting bankroll.</li>
+<li>Open the app. It walks you through a short setup — pick <strong>where you play locally</strong> and your
+   usual casino, and optionally a default game and starting bankroll.</li>
 <li>That creates your <strong>Local Play</strong> trip automatically.</li>
 <li>Log a session against it: Trips tab → your Local Play trip → <strong>+ Log Session</strong>.</li>
 <li>Or create a real trip: Trips tab → <strong>+ New Trip</strong>, give it dates and a starting bankroll.</li>
